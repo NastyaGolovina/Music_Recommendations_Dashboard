@@ -31,29 +31,52 @@ def authenticate_user():
 
     with col2:
         if "authenticated" not in st.session_state:
-            st.text_input(label="Username :", value="", key="user", on_change=creds_entered)
-            st.text_input(label="Password :", value="", key="passwd", type="password", on_change=creds_entered)
+            st.session_state["authenticated"] = False
+
+        if not st.session_state["authenticated"]:
+            st.text_input(label="Username :", value="", key="user")
+            st.text_input(label="Password :", value="", key="passwd", type="password")
+            if st.button("Log in"):
+                creds_entered()
+                if st.session_state["authenticated"]:
+                    st.rerun()
+            st.stop()
             return False
         else:
-            if st.session_state["authenticated"]:
-                return True
-            else:
-                st.text_input(label="Username :", value="", key="user", on_change=creds_entered)
-                st.text_input(label="Password :", value="", key="passwd", type="password", on_change=creds_entered)
-                return False
+            return True
 
-# def logout():
-#     for key in st.session_state.keys():
-#         del st.session_state[key]
-#  ?????
+
+# def authenticate_user():
+#     col1, col2, col3 = st.columns([1, 2, 1])
+#
+#     with col2:
+#         if "authenticated" not in st.session_state:
+#             st.text_input(label="Username :", value="", key="user", on_change=creds_entered)
+#             st.text_input(label="Password :", value="", key="passwd", type="password", on_change=creds_entered)
+#             return False
+#         else:
+#             if st.session_state["authenticated"]:
+#                 return True
+#             else:
+#                 st.text_input(label="Username :", value="", key="user", on_change=creds_entered)
+#                 st.text_input(label="Password :", value="", key="passwd", type="password", on_change=creds_entered)
+#                 return False
+
+def logout():
+    # for key in st.session_state.keys():
+    #     del st.session_state[key]
+    st.session_state["authenticated"] = False
+    st.session_state["user"] = ""
+    st.session_state["passwd"] = ""
+    st.cache_data.clear()
+    # st.rerun()
+
 
 
 if authenticate_user():
-
-    # st.sidebar.button("Logout", on_click=logout)
+    st.sidebar.button("Logout", on_click=logout)
 
     if st.session_state["role"] == "pro":
         pro_dashboard()
-
     else:
         user_dashboard()
