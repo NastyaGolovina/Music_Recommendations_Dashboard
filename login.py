@@ -80,3 +80,6 @@ if authenticate_user():
         pro_dashboard()
     else:
         user_dashboard()
+
+
+# C:\Python313\python.exe -m streamlit run login.py
