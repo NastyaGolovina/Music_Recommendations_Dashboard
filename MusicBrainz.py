@@ -2,8 +2,11 @@ import requests
 import pandas as pd
 import time
 
+input_file = "artists_blocks\\artists_part_0.csv"
+output_file = "artists_blocks\\artists_part_0_with_genres.csv"
+
 # Load your CSV with one column "artist"
-df = pd.read_csv("artists.csv")
+df = pd.read_csv(input_file)
 
 def get_artist_genres(artist_name):
     """
@@ -39,14 +42,14 @@ def get_artist_genres(artist_name):
 
 # Example: get genres for first 10 artists (for testing)
 genres = []
-for idx, artist in enumerate(df['artist'].head(10)):
+for idx, artist in enumerate(df['artist']):
     g = get_artist_genres(artist)
     genres.append(g)
     print(f"{idx+1}: {artist} -> {g}")
     time.sleep(1)  # Important: MusicBrainz free API limit = 1 request/sec
 
 # Add genres column
-df_test = df.head(10).copy()
+df_test = df.copy()
 df_test['genre'] = genres
-df_test.to_csv("artists_with_genres_test.csv", index=False)
+df_test.to_csv(output_file, index=False)
 print("Done! Saved to artists_with_genres_test.csv")
