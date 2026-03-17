@@ -6,10 +6,10 @@ from threading import Semaphore
 import threading
 import os
 
-input_file = "artists_blocks/artists_part_1.csv"
-output_file = "artists_blocks/artists_part_1_with_genres.csv"
+input_file = "artists_blocks/artists_part_2.csv"
+output_file = "artists_result/artists_part_2_with_genres.csv"
 
-API_KEY = "YOUR KEY"  # <-- paste API key here (not Shared secret)
+API_KEY = ""  # <-- paste API key here (not Shared secret)
 
 df = pd.read_csv(input_file)
 
