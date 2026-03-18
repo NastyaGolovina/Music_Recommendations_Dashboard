@@ -17,4 +17,4 @@ def user_dashboard():
     c1.metric("Songs", music["title"].nunique(), border=True)
     c2.metric("Artists", music["artist"].nunique(), border=True)
     c3.metric("Regions", music["region"].nunique(), border=True)
-    c4.metric("streams", "...", border=True)
+    c4.metric("streams", music['streams'].sum(), border=True)
