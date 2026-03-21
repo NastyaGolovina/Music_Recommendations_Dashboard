@@ -17,23 +17,12 @@ def get_metrics(music):
 def user_dashboard():
     st.title("User Dashboard")
 
-    # with st.spinner("Loading music data..."):
-    #     music = load_music()
-    #
-    # with st.spinner("Loading ganers data..."):
-    #         genres = load_genre()
     with st.spinner("Loading data..."):
             music = load_data()
 
     m = get_metrics(music)
 
     c1, c2, c3, c4 = st.columns(4)
-
-
-    # c1.metric("Songs", music["title"].nunique(), border=True)
-    # c2.metric("Artists", music["artist"].nunique(), border=True)
-    # c3.metric("Regions", music["region"].nunique(), border=True)
-    # c4.metric("streams", music['streams'].sum(), border=True)
 
 
     c1.metric("Songs", m["songs"], border=True)
