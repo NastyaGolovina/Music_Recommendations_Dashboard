@@ -19,6 +19,9 @@ def user_dashboard():
 
     with st.spinner("Loading data..."):
             music = load_data()
+    # There are replaced all NaN values in the genre column with "pop"
+    # This dataset has a genre column named "main_genre"
+    # The main_genre is only the first genre from the list
 
     m = get_metrics(music)
 
@@ -90,9 +93,9 @@ def user_dashboard():
             color_discrete_sequence=["#6b068a"]
             # ,title="Top Songs by Streams"
             # ,hover_data = {
-            #     "title": False,  # убрать title (уже видно на оси)
-            #     "streams": True,  # показать streams
-            #     "artist": True,  # добавить исполнителя
+            #     "title": False,
+            #     "streams": True,
+            #     "artist": True,
             # }
         )
 
