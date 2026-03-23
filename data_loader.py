@@ -11,7 +11,7 @@ import streamlit as st
 
 @st.cache_data(show_spinner=False)
 def load_data():
-    music = pd.read_csv("charts.csv")
+    music = pd.read_csv("music.csv")
     genres = pd.read_csv("artists_merged_clean_NAN_to_pop.csv")
 
     # music["date"] = pd.to_datetime(music["date"])
