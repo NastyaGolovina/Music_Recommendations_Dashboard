@@ -1,2 +1,0 @@
-https://musicbrainz.org/ws/2/artist?query=Shakira&fmt=json
-https://musicbrainz.org/ws/2/artist/bf24ca37-25f4-4e34-9aec-460b94364cfc?inc=genres&fmt=json
