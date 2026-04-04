@@ -57,9 +57,66 @@ def pro_dashboard():
         with r2:
             st.subheader("Left upper right")
 
-        r3, r4 = st.columns([1, 3], border=True)
+
+        r3, r4 = st.columns([2, 3], border=True)
         with r3:
-            st.subheader("Left lower left")
+            st.subheader("📊 Market Overview")
+
+            # toggle between views
+            view = st.radio("View by", ["Genre", "Artist", "Song"], horizontal=True, key="pro_view")
+
+            # filters
+            p1, p2, p3 = st.columns(3)
+
+            pro_copy = music.copy()
+            pro_copy["date"] = pd.to_datetime(pro_copy["date"])
+            pro_copy["year"] = pro_copy["date"].dt.year
+
+            selected_year = p1.selectbox("Year",
+                                         ["All"] + sorted(pro_copy["year"].dropna().unique().astype(int).tolist()),
+                                         key="pro_year")
+            selected_region = p2.selectbox("Region", ["Global"] + sorted(
+                pro_copy[pro_copy["region"] != "Global"]["region"].unique().tolist()), key="pro_region")
+            top_n = p3.selectbox("Top", [5, 10, 20], key="pro_topn")
+
+            # apply filters
+            filtered = pro_copy.copy()
+            if selected_year != "All":
+                filtered = filtered[filtered["year"] == int(selected_year)]
+            if selected_region != "Global":
+                filtered = filtered[filtered["region"] == selected_region]
+
+            # group by selected view
+            if view == "Genre":
+                col = "main_genre"
+            elif view == "Artist":
+                col = "artist"
+            else:
+                col = "title"
+
+            grouped = (
+                filtered.groupby(col)["streams"]
+                .sum()
+                .sort_values(ascending=False)
+                .head(top_n)
+                .reset_index()
+            )
+
+            # pie chart
+            fig = px.pie(
+                grouped,
+                names=col,
+                values="streams",
+                hole=0.3,
+            )
+
+            fig.update_layout(
+                height=450,
+                margin=dict(l=0, r=0, t=0, b=0),
+                showlegend=True,
+            )
+
+            st.plotly_chart(fig, use_container_width=True)
         with r4:
             st.subheader("Ranking of songs")
             songs_ranking = music.copy()
