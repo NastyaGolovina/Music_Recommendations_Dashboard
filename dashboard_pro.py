@@ -340,4 +340,57 @@ def pro_dashboard():
 
 
     with col_right:
-        st.subheader("Right column")
+        st.subheader("Which artists dominate the market?")
+
+        pro_copy2 = music.copy()
+        pro_copy2["date"] = pd.to_datetime(pro_copy2["date"])
+        pro_copy2["year"] = pro_copy2["date"].dt.year
+
+        col1, col2 = st.columns(2)
+        selected_year = col1.selectbox(
+            "Year",
+            ["All"] + sorted(pro_copy2["year"].dropna().unique().astype(int).tolist()),
+            key="dom_year"
+        )
+        selected_genre = col2.selectbox(
+            "Genre",
+            ["All"] + sorted(pro_copy2["main_genre"].dropna().unique().tolist()),
+            key="dom_genre"
+        )
+
+        filtered_pro = pro_copy2.copy()
+        if selected_year != "All":
+            filtered_pro = filtered_pro[filtered_pro["year"] == selected_year]
+        if selected_genre != "All":
+            filtered_pro = filtered_pro[filtered_pro["main_genre"] == selected_genre]
+
+        top_artists = (
+            filtered_pro.groupby("artist", as_index=False)["streams"]
+            .sum()
+            .sort_values("streams", ascending=False)
+            .head(10)
+        )
+
+        fig = px.bar(
+            top_artists,
+            x="streams",
+            y="artist",
+            orientation="h",
+            color_discrete_sequence=["#6b068a"]
+        )
+        fig.update_layout(
+            yaxis=dict(categoryorder="total ascending"),
+            yaxis_title="",
+            xaxis_title="Streams",
+            height=400
+        )
+        st.plotly_chart(fig, use_container_width=True)
+
+        st.dataframe(
+            top_artists.rename(columns={
+                "artist": "Artist",
+                "streams": "Total Streams"
+            }),
+            use_container_width=True,
+            hide_index=True
+        )
