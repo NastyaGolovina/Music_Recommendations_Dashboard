@@ -121,7 +121,65 @@ def user_dashboard():
 
         r3, r4 = st.columns([5, 6], border=True)
         with r3:
-            st.subheader("Right lower left")
+            st.subheader("🎧 Top Artists by Streams")
+
+            f1, f2, f3 = st.columns(3)
+
+            top_n = f1.selectbox("Top", [5, 10, 20, 100], key="top_artists")
+
+            region_selected = f2.selectbox(
+                "Region",
+                ["Global"] + sorted(
+                    music.loc[music["region"] != "Global", "region"].unique().tolist()
+                ),
+                key="region_artists"
+            )
+
+            _dates = pd.to_datetime(music["date"])
+            date_min = _dates.min().date()
+            date_max = _dates.max().date()
+
+            date_range = f3.date_input(
+                "Time",
+                value=(date_min, date_max),
+                min_value=date_min,
+                max_value=date_max,
+                format="DD.MM.YYYY",
+                key="date_artists"
+            )
+
+            mask = music["region"] == region_selected
+            if len(date_range) == 2:
+                mask &= (_dates >= pd.Timestamp(date_range[0])) & \
+                        (_dates <= pd.Timestamp(date_range[1]))
+
+            artists_df = (
+                music.loc[mask, ["artist", "streams"]]
+                .groupby("artist", as_index=False)["streams"]
+                .sum()
+                .sort_values(by="streams", ascending=False)
+            )
+
+            fig_artists = px.bar(
+                artists_df.head(top_n),
+                x="streams",
+                y="artist",
+                orientation="h",
+                color_discrete_sequence=["#2ec4b6"],
+                hover_data={"artist": False, "streams": ":,"}
+            )
+
+            fig_artists.update_layout(
+                yaxis=dict(categoryorder="total ascending"),
+                yaxis_title="",
+                xaxis_title="Streams",
+                height=350,
+                margin=dict(l=0, r=0, t=0, b=0),
+                paper_bgcolor="rgba(0,0,0,0)",
+                plot_bgcolor="rgba(0,0,0,0)"
+            )
+
+            st.plotly_chart(fig_artists, use_container_width=True)
         with r4:
             st.subheader("Mean Statistics")
 
