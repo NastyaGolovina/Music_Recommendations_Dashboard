@@ -200,8 +200,8 @@ def user_dashboard():
                 showframe=False,
                 showcoastlines=True,
                 coastlinecolor="rgba(255,255,255,0.1)",
-                showland=True, landcolor="#1a1a2e",
-                showocean=True, oceancolor="#0d0d1a",
+                showland=True, landcolor="#e8e8e8",  # ← light grey land
+                showocean=True, oceancolor="#a8c8e8",  # ← light blue ocean
                 showlakes=False,
                 bgcolor="rgba(0,0,0,0)",
                 projection_type="natural earth",
