@@ -31,9 +31,6 @@ def user_dashboard():
 
     with st.spinner("Loading data..."):
             music = load_data()
-    # There are replaced all NaN values in the genre column with "pop"
-    # This dataset has a genre column named "main_genre"
-    # The main_genre is only the first genre from the list
 
     m = get_metrics(music)
 
